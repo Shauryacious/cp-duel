@@ -2,21 +2,24 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { extractProblemName, getPlatform } from "../../utils/url";
-import platformLogos from "../../constants/platforms";
-import Checkbox from "../buttons/Checkbox";
-import FavoriteButton from "../buttons/FavoriteButton";
+import { extractProblemName, getPlatform } from "@/utils/url";
+import platformLogos from "@/constants/platforms";
+import Checkbox from "@/components/buttons/Checkbox";
+import FavoriteButton from "@/components/buttons/FavoriteButton";
 
 /**
- * Renders a single problem item row.
- * @param {object} props
- * @param {string} props.url - Problem URL.
- * @param {number} props.sectionIdx
- * @param {number} props.problemIdx
- * @param {boolean} props.checked
- * @param {boolean} props.favorite
- * @param {function} props.onCheck
- * @param {function} props.onFavorite
+ * Renders a single problem item row with a checkbox, problem link, platform logo, and favorite toggle.
+ *
+ * @param {Object} props
+ * @param {string} props.url - The URL of the problem.
+ * @param {number} props.sectionIdx - Index of the section for unique identification.
+ * @param {number} props.problemIdx - Index of the problem within the section.
+ * @param {boolean} props.checked - Whether the problem is marked as solved.
+ * @param {boolean} props.favorite - Whether the problem is favorited.
+ * @param {(sectionIdx: number, problemIdx: number) => void} props.onCheck - Callback when checkbox is toggled.
+ * @param {(sectionIdx: number, problemIdx: number, url: string) => void} props.onFavorite - Callback when favorite button is toggled.
+ *
+ * @returns {JSX.Element} The rendered problem item.
  */
 function ProblemItem({
   url,
@@ -32,7 +35,10 @@ function ProblemItem({
   const checkboxId = `sheet-${sectionIdx}-${problemIdx}`;
 
   return (
-    <li className="flex items-center gap-3 bg-gray-700 rounded-lg px-3 py-2 hover:bg-gray-600 transition">
+    <li
+      className="flex items-center gap-3 bg-gray-700 rounded-lg px-3 py-2 hover:bg-gray-600 transition"
+      role="listitem"
+    >
       <Checkbox
         id={checkboxId}
         checked={checked}
@@ -47,13 +53,14 @@ function ProblemItem({
           target="_blank"
           rel="noopener noreferrer"
           className="text-white hover:text-amber-300 font-medium transition"
+          aria-label={`Open problem ${extractProblemName(url)}`}
         >
           {extractProblemName(url)}
         </a>
         {platformLogo && (
           <img
             src={platformLogo}
-            alt={platform}
+            alt={`${platform} logo`}
             className="w-6 h-6 inline-block align-middle"
             style={{ minWidth: 24 }}
           />
@@ -62,6 +69,7 @@ function ProblemItem({
       <FavoriteButton
         isActive={favorite}
         onClick={() => onFavorite(sectionIdx, problemIdx, url)}
+        aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
       />
     </li>
   );
@@ -77,4 +85,4 @@ ProblemItem.propTypes = {
   onFavorite: PropTypes.func.isRequired,
 };
 
-export default ProblemItem;
+export default React.memo(ProblemItem);

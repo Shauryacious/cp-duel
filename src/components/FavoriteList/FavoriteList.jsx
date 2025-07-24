@@ -2,25 +2,28 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { extractProblemName } from "../../utils/url";
-import FavoriteButton from "../buttons/FavoriteButton";
+import { extractProblemName } from "@/utils/url";
+import FavoriteButton from "@/components/buttons/FavoriteButton";
 
 /**
  * Renders a list of favorited problems.
- * @param {object[]} favoriteProblems - Array of favorite problem info.
- * @param {function} onFavorite - Handler for toggling favorite status.
- * @param {boolean} visible - Whether to show the list.
+ *
+ * @param {Object} props
+ * @param {Array<{sectionIdx: number, problemIdx: number, url: string}>} props.favoriteProblems - Array of favorite problem info.
+ * @param {(sectionIdx: number, problemIdx: number, url: string) => void} props.onFavorite - Handler for toggling favorite status.
+ * @param {boolean} props.visible - Whether to show the list.
+ * @returns {JSX.Element|null} The favorite list component or null if not visible.
  */
 function FavoriteList({ favoriteProblems, onFavorite, visible }) {
   if (!visible) return null;
 
   return (
-    <div className="mb-10">
+    <section aria-label="Favorite Problems List" className="mb-10">
       <h2 className="text-2xl font-bold text-amber-400 mb-2">⭐ Favorites</h2>
       {favoriteProblems.length === 0 ? (
-        <div className="text-gray-400 italic mb-4">
+        <p className="text-gray-400 italic mb-4" role="alert">
           No favorites yet. Click the star next to a problem to add it here!
-        </div>
+        </p>
       ) : (
         <ul className="space-y-3 mb-4">
           {favoriteProblems.map(({ sectionIdx, problemIdx, url }) => (
@@ -33,6 +36,9 @@ function FavoriteList({ favoriteProblems, onFavorite, visible }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white hover:text-amber-300 font-medium transition"
+                aria-label={`Open problem ${extractProblemName(
+                  url
+                )} in a new tab`}
               >
                 {extractProblemName(url)}
               </a>
@@ -40,12 +46,13 @@ function FavoriteList({ favoriteProblems, onFavorite, visible }) {
                 isActive={true}
                 onClick={() => onFavorite(sectionIdx, problemIdx, url)}
                 title="Remove from favorites"
+                aria-label={`Remove ${extractProblemName(url)} from favorites`}
               />
             </li>
           ))}
         </ul>
       )}
-    </div>
+    </section>
   );
 }
 
@@ -61,4 +68,4 @@ FavoriteList.propTypes = {
   visible: PropTypes.bool.isRequired,
 };
 
-export default FavoriteList;
+export default React.memo(FavoriteList);
