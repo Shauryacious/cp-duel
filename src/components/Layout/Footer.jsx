@@ -1,7 +1,6 @@
-import React from "react";
+// src/components/Layout/Footer.jsx
 
-// Example logo (optional)
-// import logo from "./assets/logo.svg";
+import React from "react";
 
 const socialLinks = [
   {
@@ -40,58 +39,60 @@ const navLinks = [
   { href: "/about", label: "About" },
 ];
 
-const Footer = () => (
-  <footer className="bg-gray-900 border-t border-gray-700 pt-10 pb-6 px-4">
-    <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-8">
-      {/* Logo & Name */}
-      <div className="flex flex-col items-center md:items-start">
-        {/* <img src={logo} alt="CP Duel" className="w-10 h-10 mb-2" /> */}
-        <span className="text-2xl font-bold text-amber-400 tracking-wide">
-          CP Duel
-        </span>
-        <span className="text-gray-400 text-sm mt-1">
-          The arena for competitive programmers.
-        </span>
+function Footer() {
+  return (
+    <footer className="bg-gray-900 border-t border-gray-700 pt-10 pb-6 px-4">
+      <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-8">
+        {/* Logo & Name */}
+        <div className="flex flex-col items-center md:items-start">
+          <span className="text-2xl font-bold text-amber-400 tracking-wide">
+            CP Duel
+          </span>
+          <span className="text-gray-400 text-sm mt-1">
+            The arena for competitive programmers.
+          </span>
+        </div>
+
+        {/* Navigation Links */}
+        <nav className="flex flex-wrap justify-center gap-6">
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="text-gray-300 hover:text-amber-400 transition font-medium"
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        {/* Social Icons */}
+        <div className="flex justify-center gap-5">
+          {socialLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={link.label}
+              className="text-gray-400 hover:text-amber-400 transition"
+            >
+              {link.icon}
+            </a>
+          ))}
+        </div>
       </div>
 
-      {/* Navigation Links */}
-      <nav className="flex flex-wrap justify-center gap-6">
-        {navLinks.map((link) => (
-          <a
-            key={link.label}
-            href={link.href}
-            className="text-gray-300 hover:text-amber-400 transition font-medium"
-          >
-            {link.label}
-          </a>
-        ))}
-      </nav>
-
-      {/* Social Icons */}
-      <div className="flex justify-center gap-5">
-        {socialLinks.map((link) => (
-          <a
-            key={link.label}
-            href={link.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={link.label}
-            className="text-gray-400 hover:text-amber-400 transition"
-          >
-            {link.icon}
-          </a>
-        ))}
+      <div className="mt-8 text-center text-gray-500 text-xs">
+        <span>© {new Date().getFullYear()} CP Duel. All rights reserved.</span>
+        <span className="block mt-1">
+          Made with <span className="text-amber-400">♥</span> for competitive
+          programmers by <span className="text-amber-400">Shaurya Agrawal</span>
+          .
+        </span>
       </div>
-    </div>
-
-    <div className="mt-8 text-center text-gray-500 text-xs">
-      <span>© {new Date().getFullYear()} CP Duel. All rights reserved.</span>
-      <span className="block mt-1">
-        Made with <span className="text-amber-400">♥</span> for competitive
-        programmers by <span className="text-amber-400">Shaurya Agrawal</span>.
-      </span>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+}
 
 export default Footer;

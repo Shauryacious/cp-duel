@@ -1,18 +1,21 @@
-import React, { useState } from "react";
-import dpSections from "./dpSections";
-import { useLocalStorageState } from "./utils";
-import FavoriteList from "./FavoriteList";
-import ProblemList from "./ProblemList";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
+// src/pages/DPSheetPage.jsx
 
-const DPSheetPage = () => {
+import React, { useState } from "react";
+import dpSections from "../data/dpSections";
+import useLocalStorageState from "../hooks/useLocalStorageState";
+import FavoriteList from "../components/FavoriteList/FavoriteList";
+import ProblemList from "../components/ProblemList/ProblemList";
+import CircularProgressBar from "../components/Progress/CircularProgressBar";
+
+function DPSheetPage() {
   const [checked, setChecked] = useLocalStorageState("dpChecklistState", {});
   const [favorites, setFavorites] = useLocalStorageState("dpFavorites", {});
   const [openIndex, setOpenIndex] = useState(0);
   const [showFavorites, setShowFavorites] = useState(false);
 
-  const toggleSection = (idx) => setOpenIndex(openIndex === idx ? null : idx);
+  const toggleSection = (idx) => {
+    setOpenIndex(openIndex === idx ? null : idx);
+  };
 
   const handleCheck = (sectionIdx, problemIdx) => {
     setChecked((prev) => ({
@@ -28,12 +31,11 @@ const DPSheetPage = () => {
         const updated = { ...prev };
         delete updated[key];
         return updated;
-      } else {
-        return {
-          ...prev,
-          [key]: { sectionIdx, problemIdx, url },
-        };
       }
+      return {
+        ...prev,
+        [key]: { sectionIdx, problemIdx, url },
+      };
     });
   };
 
@@ -54,7 +56,6 @@ const DPSheetPage = () => {
   );
   const overallPercent =
     totalProblems === 0 ? 0 : Math.round((totalSolved / totalProblems) * 100);
-
   const favoriteProblems = Object.values(favorites);
 
   return (
@@ -76,17 +77,9 @@ const DPSheetPage = () => {
             </div>
           </div>
           <div className="w-32 h-32 flex-shrink-0">
-            <CircularProgressbar
+            <CircularProgressBar
               value={overallPercent}
               text={`${overallPercent}%`}
-              styles={buildStyles({
-                pathColor: "#f59e42",
-                textColor: "#fff",
-                trailColor: "#333",
-                textSize: "24px",
-                strokeLinecap: "round",
-              })}
-              strokeWidth={10}
             />
           </div>
         </div>
@@ -138,14 +131,13 @@ const DPSheetPage = () => {
             )}
           </button>
         </div>
-        {/* Favorites List (hidden/shown by button) */}
         <FavoriteList
           favoriteProblems={favoriteProblems}
-          handleFavorite={handleFavorite}
+          onFavorite={handleFavorite}
           visible={showFavorites}
         />
 
-        {/* Sections */}
+        {/* Sheets Sections */}
         <div className="space-y-6">
           {dpSections.map((section, sectionIdx) => {
             const links = section.links || [];
@@ -216,12 +208,12 @@ const DPSheetPage = () => {
                 >
                   {links.length > 0 ? (
                     <ProblemList
-                      links={links}
+                      problems={links}
                       sectionIdx={sectionIdx}
                       checked={checked}
                       favorites={favorites}
-                      handleCheck={handleCheck}
-                      handleFavorite={handleFavorite}
+                      onCheck={handleCheck}
+                      onFavorite={handleFavorite}
                     />
                   ) : (
                     <span>{section.description}</span>
@@ -234,6 +226,6 @@ const DPSheetPage = () => {
       </div>
     </div>
   );
-};
+}
 
 export default DPSheetPage;
