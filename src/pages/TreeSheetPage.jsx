@@ -1,13 +1,53 @@
 // src/pages/TreeSheetPage.jsx
 
-import React from "react";
+import React, { useCallback } from "react";
+import treeSections from "@/data/treeSections";
+import useLocalStorageState from "@/hooks/useLocalStorageState";
+import SheetPageLayout from "@/layout/SheetPageLayout";
 
 function TreeSheetPage() {
+  const [checked, setChecked] = useLocalStorageState("treeChecklistState", {});
+  const [favorites, setFavorites] = useLocalStorageState("treeFavorites", {});
+
+  const handleCheck = useCallback(
+    (sectionIdx, problemIdx) => {
+      const key = `${sectionIdx}-${problemIdx}`;
+      setChecked((prev) => ({
+        ...prev,
+        [key]: !prev[key],
+      }));
+    },
+    [setChecked]
+  );
+
+  const handleFavorite = useCallback(
+    (sectionIdx, problemIdx, url) => {
+      const key = `${sectionIdx}-${problemIdx}`;
+      setFavorites((prev) => {
+        if (prev[key]) {
+          const updated = { ...prev };
+          delete updated[key];
+          return updated;
+        }
+        return {
+          ...prev,
+          [key]: { sectionIdx, problemIdx, url },
+        };
+      });
+    },
+    [setFavorites]
+  );
+
   return (
-    <div className="max-w-3xl mx-auto py-12 text-white">
-      <h1 className="text-4xl font-bold mb-4">Tree Sheet</h1>
-      <p>Welcome to the Tree Data Structures Sheet. Problems coming soon!</p>
-    </div>
+    <SheetPageLayout
+      title="Tree Sheet"
+      tagline="Branch Out Your Skills with Tree Mastery!"
+      sections={treeSections}
+      checked={checked}
+      favorites={favorites}
+      onCheck={handleCheck}
+      onFavorite={handleFavorite}
+    />
   );
 }
 
