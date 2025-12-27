@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 const navLinks = [
   { href: "/", label: "Home" },
+  { href: "/cp", label: "CP Topics" },
   // Add more navigation links here as routes expand.
 ];
 
